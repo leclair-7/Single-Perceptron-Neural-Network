@@ -6,10 +6,10 @@
 import numpy as np
 
 
-class NeuralNetwork(object, fileName):
+class NeuralNetwork(object):
     def __init__(self):
         self.alpha = alphaUpdate
-        self.data = dataSet
+        self.data = np.array([])
         #defines hyperparameters
         self.inputLayerSize = NumInputs - 1
         self.outputLayerSize = 1
@@ -19,53 +19,56 @@ class NeuralNetwork(object, fileName):
         self.w1 =np.zeros( self.inputLayerSize ,1)
         #self.w2 =np.array( self.hiddenLayerSize ,1)
         self.w2 =np.array( [1])
+        
+        # block comment under here allows the NN to initialize to random numbers
+        # in its matrices instead of zeros         
         '''
         self.w1 =np.random.randn( self.inputLayerSize, \
                                   self.hiddenLayerSize)
         self.w2 = np.random.randn( self.hiddenLayerSize, \
                                     self.outputLayerSize)
         '''
+    '''
+    Under here are the file read operations
+    '''
+    def nonblank_lines(self,f):
+        for l in f:
+            line = l.rstrip()
+            if line:
+                yield line
+    def getDataFromFile(self,filename):
+        count = 0        
+        with open(filename,'r') as ofo:    
+            for line in self.nonblank_lines(ofo):        
+                if len(line.split()) != 0 and count ==0:
+                    count+=1
+                    self.titles = line.split()
+                    column = len(self.titles)            
+                else:
+                    count += 1
+                    currLine = line.split()            
+                    row = len(self.data)
+                    self.data = np.append( self.data, currLine)
+                    self.data = np.resize( self.data, (row + 1, column))
+                    currLine = []
+    '''
+    End of File/dataset entry functions
+    '''
     def sigmoid(self,z):
         #applies the sigmoid activation function
-        return 1/(1 + np.exp(-z))
-
+        return 1.0/(1.0 + np.exp(-z))
+        
     def sigmoindPrime(self,z):
-        #derivative of sigmoid function
-        return np.exp(-z)/((1+np.exp(-z))**2)
-
+        #derivative of sigmoid function        
+        return self.sigmoid(z) * (1.0 - self.sigmoid(z))
 
         
-    def forward(self,InputVector):        
+    def forward(self, w1, row, data):        
         #input layer matrix + hidden layer matrix                
-        self.z2 = np.dot( InputVector, self.w1)
-        self.a2 = self.sigmoid(self.z2)
-        if self.a2 > .5:
-            return 1
+        z2 = self.sigmoid( np.dot( self.data[row][:-1], w1) )        
+        if z2 > .5:
+            return 1.0
         else:
-            return 0
-        '''
-        #these 3 lines below are for increasing NN complexity 
-        self.z3 = np.dot( self.a2, self.w2)
-        yHat = self.sigmoid(self.z3)
-        return yHat
-        '''
-    def costFunctionPrime( self, X, y):
-        #Note  dot is matric multiplication, multiply is elementwise
-        self.actual = self.forward(X)
-        delta3 = np.multiply( - (y - self.actual), self.sigmoindPrime(self.z3) )
-        dJdW2 = np.dot( self.a2.T, delta3)
-        
-        delta2 = np.dot( delta3, self.w2.T * self.sigmoindPrime(self.z2))
-        dJdW1 = np.dot( X.T, delta2)
-        
-        return dJdW1, dJdW2
-    def gradientDescentWithMessage( ):
-        for x_in in range(len(data[:-1])):
-            for i in self.w1:
-                theY =  forward(data[x_in][:-1])
-                actual = data[:-1]
-                for k in 
+            return 0.0
 
-
-        
-
+    
