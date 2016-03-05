@@ -7,7 +7,7 @@ Created on Wed Mar  2 20:26:05 2016
 """
 
 import numpy as np
-import NeuralNetwork
+from NeuralNetwork import *
 
 titles=[]
 data = np.array([])
@@ -94,6 +94,9 @@ for j in range(len(data)):
     else:
         numWrong += 1
 print("\nAccuracy on training set", numRight/(numRight + numWrong)," for accuracy" )
+
+NN_uno = NeuralNetwork("train2-win.dat",.3, 3)
+NN_uno.trainNN()
     
     
     
