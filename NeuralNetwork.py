@@ -22,16 +22,10 @@ class NeuralNetwork(object):
         for i,line in enumerate(fh):
             if i is 1: break
             self.titles = line.split()
-        
-        
-        '''
-        self.data = self.getDataFromFile(trainFileName)
-        
-        '''        
+            
         self.testSet = np.loadtxt(testFile,skiprows=1)
-        
-        
-        #defines hyperparameters
+    
+        assert len(self.testSet[0]) == len(self.data[0]), "Training set and test vectors dont match"
         self.inputLayerSize = len(self.data[0]) - 1
         self.outputLayerSize = 1
         self.hiddenLayerSize = 1

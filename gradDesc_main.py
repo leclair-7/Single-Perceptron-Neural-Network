@@ -7,21 +7,30 @@ Created on Wed Mar  2 20:26:05 2016
 """
 
 import numpy as np
+import sys
+
 from NeuralNetwork import *
 
-'''
-data = np.loadtxt("train2-win.dat",skiprows=1)
+assert len(sys.argv) == 5, "Invalid number of arguments"
 
-fh = open("train2-win.dat",'r')
-for i,line in enumerate(fh):
-    if i is 1: break
-    titles = line.split()
-fh.close()
-'''
 
-NN_uno = NeuralNetwork("train5-win.dat","test5-win.dat",.9, 60)
+try:
+    trainFile = sys.argv[1]
+    testFile = sys.argv[2]
+except ValueError:
+    print("Invalid input files")
+    raise SystemExit
+
+try:
+    alpha =float( sys.argv[3])
+    numIterations = int(sys.argv[4])
+except ValueError:
+    print("alpha or number of iterations entered could",)
+    print(" not be converted to integers")
+    raise SystemExit
+
+NN_uno = NeuralNetwork(trainFile, testFile, alpha, numIterations)
 NN_uno.trainNN()
 NN_uno.test()
-
     
             
